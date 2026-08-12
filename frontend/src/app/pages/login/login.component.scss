@@ -1,0 +1,54 @@
+.auth-section {
+  min-height: 72svh;
+  display: grid;
+  align-items: center;
+}
+
+.auth-grid {
+  display: grid;
+  grid-template-columns: 1fr 420px;
+  gap: 28px;
+  align-items: center;
+}
+
+.auth-card {
+  display: grid;
+  gap: 16px;
+  padding: 18px;
+}
+
+.tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 4px;
+  background: rgba(8, 20, 24, 0.04);
+}
+
+.tabs button {
+  min-height: 38px;
+  border: 0;
+  border-radius: var(--radius);
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.tabs button.active {
+  background: #fff;
+  color: var(--ink);
+}
+
+.reset-link {
+  color: var(--brand-strong);
+  font-weight: 800;
+}
+
+@media (max-width: 880px) {
+  .auth-grid {
+    grid-template-columns: 1fr;
+  }
+}

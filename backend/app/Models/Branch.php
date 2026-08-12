@@ -13,4 +13,14 @@ class Branch extends Model
     {
         return $this->hasMany(Vehicle::class);
     }
+
+    public function pickupBookings(): HasMany
+    {
+        return $this->hasMany(Booking::class, 'pickup_branch_id');
+    }
+
+    public function returnBookings(): HasMany
+    {
+        return $this->hasMany(Booking::class, 'return_branch_id');
+    }
 }

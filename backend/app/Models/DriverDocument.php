@@ -7,10 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class DriverDocument extends Model
 {
-    protected $fillable = [
-        'user_id', 'license_number', 'license_expiry',
-        'document_url', 'verified_at',
-    ];
+    protected $fillable = ['user_id', 'license_number', 'license_expiry', 'document_url', 'verified_at'];
 
     protected function casts(): array
     {

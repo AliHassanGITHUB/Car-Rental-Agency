@@ -1,0 +1,81 @@
+<section class="section">
+  <div class="container">
+    <div class="section-title">
+      <span class="eyebrow">Staff dashboard</span>
+      <h1>Fleet, booking, and pricing command center.</h1>
+      <p>Manage inventory, reservation states, branch readiness, and basic utilization reports.</p>
+    </div>
+
+    <div class="admin-grid">
+      <form class="surface admin-form" [formGroup]="vehicleForm" (ngSubmit)="save()">
+        <h2>Fleet CRUD</h2>
+        <div class="grid two">
+          <label class="field"><span>Make</span><input formControlName="make"></label>
+          <label class="field"><span>Model</span><input formControlName="model"></label>
+          <label class="field"><span>Year</span><input type="number" formControlName="year"></label>
+          <label class="field"><span>Daily rate</span><input type="number" formControlName="daily_rate"></label>
+          <label class="field"><span>Seats</span><input type="number" formControlName="seats"></label>
+          <label class="field"><span>Branch</span><input type="number" formControlName="branch_id"></label>
+          <label class="field">
+            <span>Category</span>
+            <select formControlName="category">
+              <option value="economy">Economy</option>
+              <option value="suv">SUV</option>
+              <option value="luxury">Luxury</option>
+            </select>
+          </label>
+          <label class="field">
+            <span>Transmission</span>
+            <select formControlName="transmission">
+              <option value="automatic">Automatic</option>
+              <option value="manual">Manual</option>
+            </select>
+          </label>
+          <label class="field">
+            <span>Status</span>
+            <select formControlName="status">
+              <option value="available">Available</option>
+              <option value="maintenance">Maintenance</option>
+              <option value="retired">Retired</option>
+            </select>
+          </label>
+          <label class="field"><span>Image URL</span><input formControlName="image_url"></label>
+        </div>
+        @if (saved()) {
+          <p class="saved">Vehicle saved.</p>
+        }
+        <button class="btn primary" type="submit">Save vehicle</button>
+      </form>
+
+      <aside class="surface report">
+        <h2>Basic reporting</h2>
+        <div class="metric"><span>Fleet size</span><strong>{{ vehicles().length }}</strong></div>
+        <div class="metric"><span>Reservations</span><strong>{{ bookings().length }}</strong></div>
+        <div class="metric"><span>Estimated utilization</span><strong>68%</strong></div>
+        <div class="metric"><span>Top category</span><strong>SUV</strong></div>
+      </aside>
+    </div>
+
+    <div class="data-grid">
+      <section class="surface data-card">
+        <h2>Vehicles</h2>
+        @for (vehicle of vehicles(); track vehicle.id) {
+          <button type="button" class="row-button" (click)="edit(vehicle)">
+            <span>{{ vehicle.year }} {{ vehicle.make }} {{ vehicle.model }}</span>
+            <strong>${{ vehicle.daily_rate }}/day</strong>
+          </button>
+        }
+      </section>
+
+      <section class="surface data-card">
+        <h2>Bookings</h2>
+        @for (booking of bookings(); track booking.id) {
+          <div class="booking-row">
+            <span>#{{ booking.id }} {{ booking.vehicle?.make }} {{ booking.vehicle?.model }}</span>
+            <strong>{{ booking.status }}</strong>
+          </div>
+        }
+      </section>
+    </div>
+  </div>
+</section>

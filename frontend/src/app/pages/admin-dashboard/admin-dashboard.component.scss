@@ -1,0 +1,56 @@
+.admin-grid,
+.data-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: 18px;
+  align-items: start;
+  margin-bottom: 18px;
+}
+
+.admin-form,
+.report,
+.data-card {
+  display: grid;
+  gap: 16px;
+  padding: 18px;
+}
+
+h2 {
+  margin: 0;
+}
+
+.metric,
+.booking-row,
+.row-button {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: center;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.64);
+}
+
+.metric span,
+.booking-row span {
+  color: var(--muted);
+}
+
+.row-button {
+  width: 100%;
+  color: inherit;
+  cursor: pointer;
+}
+
+.saved {
+  color: var(--success);
+  font-weight: 800;
+}
+
+@media (max-width: 980px) {
+  .admin-grid,
+  .data-grid {
+    grid-template-columns: 1fr;
+  }
+}

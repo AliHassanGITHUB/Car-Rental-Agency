@@ -3,14 +3,16 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens;
+    use HasFactory;
+    use Notifiable;
 
     protected $fillable = [
         'name',
@@ -38,18 +40,13 @@ class User extends Authenticatable
         return $this->hasMany(Booking::class);
     }
 
-    public function reviews(): HasMany
-    {
-        return $this->hasMany(Review::class);
-    }
-
     public function driverDocuments(): HasMany
     {
         return $this->hasMany(DriverDocument::class);
     }
 
-    public function isAdmin(): bool
+    public function reviews(): HasMany
     {
-        return $this->role === 'admin';
+        return $this->hasMany(Review::class);
     }
 }

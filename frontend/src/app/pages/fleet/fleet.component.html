@@ -1,0 +1,91 @@
+<section class="section">
+  <div class="container">
+    <div class="section-title">
+      <span class="eyebrow">Fleet availability</span>
+      <h1>Compare vehicles without waiting for checkout.</h1>
+      <p>Filter by category, seats, price, and transmission. Availability is calculated against the selected dates.</p>
+    </div>
+
+    <form class="filters surface" [formGroup]="filters">
+      <label class="field">
+        <span>Pickup location</span>
+        <input formControlName="pickup_location" placeholder="Airport Terminal">
+      </label>
+      <label class="field">
+        <span>Pickup</span>
+        <input type="datetime-local" formControlName="pickup_at">
+      </label>
+      <label class="field">
+        <span>Return</span>
+        <input type="datetime-local" formControlName="return_at">
+      </label>
+      <label class="field">
+        <span>Category</span>
+        <select formControlName="category">
+          <option value="">Any</option>
+          <option value="economy">Economy</option>
+          <option value="suv">SUV</option>
+          <option value="luxury">Luxury</option>
+        </select>
+      </label>
+      <label class="field">
+        <span>Transmission</span>
+        <select formControlName="transmission">
+          <option value="">Any</option>
+          <option value="automatic">Automatic</option>
+          <option value="manual">Manual</option>
+        </select>
+      </label>
+      <label class="field">
+        <span>Seats</span>
+        <input type="number" min="2" formControlName="seats">
+      </label>
+      <label class="field">
+        <span>Min price</span>
+        <input type="number" min="0" formControlName="min_price">
+      </label>
+      <label class="field">
+        <span>Max price</span>
+        <input type="number" min="0" formControlName="max_price">
+      </label>
+    </form>
+
+    @if (loading) {
+      <p class="muted">Checking fleet availability...</p>
+    }
+
+    <div class="fleet-grid">
+      @for (vehicle of vehicles; track vehicle.id) {
+        <article class="vehicle-card surface">
+          <img [src]="vehicle.image_url || 'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=900&q=80'" [alt]="vehicle.year + ' ' + vehicle.make + ' ' + vehicle.model">
+          <div class="vehicle-body">
+            <div class="vehicle-head">
+              <div>
+                <span class="pill">{{ vehicle.category }}</span>
+                <h2>{{ vehicle.year }} {{ vehicle.make }} {{ vehicle.model }}</h2>
+              </div>
+              <strong>${{ vehicle.daily_rate }}<small>/day</small></strong>
+            </div>
+            <div class="specs">
+              <span>{{ vehicle.transmission }}</span>
+              <span>{{ vehicle.seats }} seats</span>
+              <span>{{ vehicle.included_mileage || 250 }} mi/day</span>
+              <span>{{ vehicle.rating || 4.8 }} stars</span>
+            </div>
+            <div class="availability" [class.available]="vehicle.available !== false">
+              {{ vehicle.available === false ? 'Unavailable for selected dates' : 'Available for selected dates' }}
+            </div>
+            <div class="card-actions">
+              <a class="btn" [routerLink]="['/vehicles', vehicle.id]">Details</a>
+              <a class="btn primary" routerLink="/booking" [queryParams]="{ vehicle_id: vehicle.id }">Book</a>
+            </div>
+          </div>
+        </article>
+      } @empty {
+        @if (!loading) {
+          <p class="muted">No vehicles match those filters yet.</p>
+        }
+      }
+    </div>
+  </div>
+</section>

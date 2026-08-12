@@ -1,0 +1,53 @@
+<header class="site-header">
+  <div class="container nav-wrap">
+    <a routerLink="/" class="brand" aria-label="Aster Drive home">
+      <span class="brand-mark">AD</span>
+      <span>Aster Drive</span>
+    </a>
+
+    <nav aria-label="Primary navigation">
+      <a routerLink="/fleet" routerLinkActive="active">Fleet</a>
+      <a routerLink="/locations" routerLinkActive="active">Locations</a>
+      <a routerLink="/about" routerLinkActive="active">About</a>
+      <a routerLink="/contact" routerLinkActive="active">Support</a>
+      <a routerLink="/terms" routerLinkActive="active">Policies</a>
+    </nav>
+
+    <div class="nav-actions">
+      @if (auth.currentUser(); as user) {
+        <a class="btn" routerLink="/dashboard">My trips</a>
+        @if (user.role === 'admin') {
+          <a class="btn" routerLink="/admin">Admin</a>
+        }
+        <button type="button" class="btn danger" (click)="logout()">Sign out</button>
+      } @else {
+        <a class="btn" routerLink="/login">Sign in</a>
+        <a class="btn primary" routerLink="/booking">Book now</a>
+      }
+    </div>
+  </div>
+</header>
+
+<main>
+  <router-outlet />
+</main>
+
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div>
+      <a routerLink="/" class="brand">
+        <span class="brand-mark">AD</span>
+        <span>Aster Drive</span>
+      </a>
+      <p>Transparent car rental for airport, city, and long-stay trips.</p>
+    </div>
+    <div>
+      <span class="footer-label">Trust</span>
+      <p>Secure checkout, visible cancellation policy, verified driver workflow.</p>
+    </div>
+    <div>
+      <span class="footer-label">Local dev</span>
+      <p>Angular on 4200, Laravel API on 8000.</p>
+    </div>
+  </div>
+</footer>

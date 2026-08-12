@@ -1,0 +1,37 @@
+.dashboard-head {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 20px;
+  align-items: end;
+}
+
+.trip {
+  display: grid;
+  gap: 14px;
+  padding: 20px;
+}
+
+.trip h2,
+.trip p {
+  margin: 0;
+}
+
+.trip p {
+  color: var(--muted);
+}
+
+.trip strong {
+  font-size: 1.8rem;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+@media (max-width: 760px) {
+  .dashboard-head {
+    grid-template-columns: 1fr;
+  }
+}

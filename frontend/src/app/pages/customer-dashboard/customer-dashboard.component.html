@@ -1,0 +1,36 @@
+<section class="section">
+  <div class="container">
+    <div class="dashboard-head">
+      <div class="section-title">
+        <span class="eyebrow">Customer dashboard</span>
+        <h1>Your trips and invoices.</h1>
+        <p>Upcoming bookings can be modified or cancelled while policy allows. Past trips keep invoices available.</p>
+      </div>
+      <a class="btn primary" routerLink="/booking">New booking</a>
+    </div>
+
+    <div class="grid two">
+      @for (booking of bookings; track booking.id) {
+        <article class="surface trip">
+          <div>
+            <span class="pill">{{ booking.status }}</span>
+            <h2>{{ booking.vehicle?.make }} {{ booking.vehicle?.model }}</h2>
+          </div>
+          <p>{{ booking.start_date }} to {{ booking.end_date }}</p>
+          <strong>${{ booking.total_price }}</strong>
+          <div class="actions">
+            <button class="btn" type="button">Modify</button>
+            <button class="btn danger" type="button">Cancel</button>
+            <button class="btn" type="button">Download invoice</button>
+          </div>
+        </article>
+      } @empty {
+        <article class="surface trip">
+          <h2>No bookings yet</h2>
+          <p>Search the fleet and create your first reservation.</p>
+          <a class="btn primary" routerLink="/fleet">Browse fleet</a>
+        </article>
+      }
+    </div>
+  </div>
+</section>

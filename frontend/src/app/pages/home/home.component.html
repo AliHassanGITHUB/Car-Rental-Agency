@@ -1,0 +1,89 @@
+<section class="hero">
+  <div class="container hero-grid">
+    <div class="hero-copy">
+      <span class="eyebrow">Premium car rental, clear from the first click</span>
+      <h1>Aster Drive</h1>
+      <p>
+        Book economy, SUV, and luxury vehicles with live availability, transparent pricing,
+        secure checkout, and no policy surprises at the end.
+      </p>
+
+      <form class="search surface" [formGroup]="searchForm" (ngSubmit)="search()">
+        <label class="field">
+          <span>Pickup location</span>
+          <input formControlName="pickup_location" placeholder="Airport, city, or branch">
+        </label>
+        <label class="field">
+          <span>Pickup</span>
+          <input type="datetime-local" formControlName="pickup_at">
+        </label>
+        <label class="field">
+          <span>Return</span>
+          <input type="datetime-local" formControlName="return_at">
+        </label>
+        <label class="field">
+          <span>Category</span>
+          <select formControlName="category">
+            <option value="">Any vehicle</option>
+            <option value="economy">Economy</option>
+            <option value="suv">SUV</option>
+            <option value="luxury">Luxury</option>
+          </select>
+        </label>
+        <button class="btn brand" type="submit">Search cars</button>
+      </form>
+
+      <div class="trust-row" aria-label="Trust signals">
+        @for (signal of trustSignals; track signal) {
+          <span>{{ signal }}</span>
+        }
+      </div>
+    </div>
+
+    <div class="hero-media" aria-hidden="true">
+      <img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1200&q=80" alt="">
+      <div class="media-card surface">
+        <span>Live estimate</span>
+        <strong>$236.40</strong>
+        <small>3 days, taxes and insurance preview included</small>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="section-title">
+      <span class="eyebrow">Built for same-day confidence</span>
+      <h2>Search, compare, verify, pay.</h2>
+      <p>Every step keeps price and policy information visible, so customers understand the trip before they commit.</p>
+    </div>
+    <div class="grid three">
+      <article class="feature surface">
+        <span>01</span>
+        <h3>Live fleet filtering</h3>
+        <p>Category, transmission, seats, price range, and availability all update from the selected dates.</p>
+      </article>
+      <article class="feature surface">
+        <span>02</span>
+        <h3>Visible policy</h3>
+        <p>Cancellation and modification terms appear before payment, alongside the itemized invoice.</p>
+      </article>
+      <article class="feature surface">
+        <span>03</span>
+        <h3>Staff dashboard</h3>
+        <p>Admins can manage vehicles, reservations, utilization, seasonal pricing, and branch operations.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="section band">
+  <div class="container band-grid">
+    <div>
+      <span class="eyebrow">Fleet preview</span>
+      <h2>Vehicles ready for airport, city, and long-stay rentals.</h2>
+    </div>
+    <a class="btn primary" routerLink="/fleet">Compare fleet</a>
+  </div>
+</section>

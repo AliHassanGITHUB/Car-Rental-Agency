@@ -1,0 +1,45 @@
+@if (vehicle) {
+  <section class="detail-hero">
+    <div class="container detail-grid">
+      <div class="detail-copy">
+        <span class="eyebrow">{{ vehicle.category }} rental</span>
+        <h1>{{ vehicle.year }} {{ vehicle.make }} {{ vehicle.model }}</h1>
+        <p>
+          {{ vehicle.transmission }} transmission, {{ vehicle.seats }} seats, {{ vehicle.included_mileage || 250 }}
+          included miles per day, and a live daily rate of ${{ vehicle.daily_rate }}.
+        </p>
+        <div class="actions">
+          <a class="btn primary" routerLink="/booking" [queryParams]="{ vehicle_id: vehicle.id }">Reserve this car</a>
+          <a class="btn" routerLink="/fleet">Compare fleet</a>
+        </div>
+      </div>
+      <img [src]="vehicle.image_url || 'https://images.unsplash.com/photo-1542362567-b07e54358753?auto=format&fit=crop&w=1400&q=80'" [alt]="vehicle.make + ' ' + vehicle.model">
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container grid three">
+      <article class="surface info">
+        <span>Specs</span>
+        <strong>{{ vehicle.seats }} seats</strong>
+        <p>{{ vehicle.transmission }} transmission, branch-ready, daily maintenance checks.</p>
+      </article>
+      <article class="surface info">
+        <span>Insurance</span>
+        <strong>Flexible cover</strong>
+        <p>Basic liability is included. Full insurance can be added before checkout.</p>
+      </article>
+      <article class="surface info">
+        <span>Reviews</span>
+        <strong>{{ vehicle.rating || 4.8 }} / 5</strong>
+        <p>{{ vehicle.reviews_count || 28 }} customer reviews with cleanliness and pickup notes.</p>
+      </article>
+    </div>
+  </section>
+} @else {
+  <section class="section">
+    <div class="container">
+      <p>Loading vehicle...</p>
+    </div>
+  </section>
+}

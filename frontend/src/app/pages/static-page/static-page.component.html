@@ -1,0 +1,18 @@
+<section class="section static-hero">
+  <div class="container static-grid">
+    <div class="section-title">
+      <span class="eyebrow">{{ page.eyebrow }}</span>
+      <h1>{{ page.title }}</h1>
+      <p>{{ page.body }}</p>
+      <a class="btn primary" routerLink="/booking">Start a booking</a>
+    </div>
+    <div class="surface point-card">
+      @for (point of page.points; track point) {
+        <div>
+          <span></span>
+          <strong>{{ point }}</strong>
+        </div>
+      }
+    </div>
+  </div>
+</section>

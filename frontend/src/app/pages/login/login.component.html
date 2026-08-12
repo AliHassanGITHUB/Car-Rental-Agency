@@ -1,0 +1,44 @@
+<section class="section auth-section">
+  <div class="container auth-grid">
+    <div class="section-title">
+      <span class="eyebrow">Account access</span>
+      <h1>Pick up where your booking left off.</h1>
+      <p>Customers can view trips, invoices, and modifications. Staff accounts unlock fleet and reservation management.</p>
+    </div>
+
+    <form class="surface auth-card" [formGroup]="form" (ngSubmit)="submit()">
+      <div class="tabs" role="tablist">
+        <button type="button" [class.active]="mode() === 'login'" (click)="mode.set('login')">Sign in</button>
+        <button type="button" [class.active]="mode() === 'register'" (click)="mode.set('register')">Register</button>
+      </div>
+
+      @if (mode() === 'register') {
+        <label class="field">
+          <span>Name</span>
+          <input formControlName="name">
+        </label>
+        <label class="field">
+          <span>Phone</span>
+          <input formControlName="phone">
+        </label>
+      }
+
+      <label class="field">
+        <span>Email</span>
+        <input type="email" formControlName="email">
+      </label>
+      <label class="field">
+        <span>Password</span>
+        <input type="password" formControlName="password">
+      </label>
+
+      <a class="reset-link" href="mailto:support@asterdrive.test">Reset password through support</a>
+
+      @if (error()) {
+        <p class="error">{{ error() }}</p>
+      }
+
+      <button class="btn primary" type="submit">{{ mode() === 'login' ? 'Sign in' : 'Create account' }}</button>
+    </form>
+  </div>
+</section>

@@ -1,0 +1,132 @@
+<section class="section">
+  <div class="container booking-grid">
+    <div>
+      <div class="section-title">
+        <span class="eyebrow">Secure checkout</span>
+        <h1>Reserve with price and policy visible.</h1>
+        <p>Driver verification and add-ons happen before payment, with a live invoice beside the form.</p>
+      </div>
+
+      <form class="surface booking-form" [formGroup]="bookingForm" (ngSubmit)="reserve()">
+        <div class="grid two">
+          <label class="field">
+            <span>Vehicle</span>
+            <select formControlName="vehicle_id">
+              @for (vehicle of vehicles(); track vehicle.id) {
+                <option [value]="vehicle.id">{{ vehicle.year }} {{ vehicle.make }} {{ vehicle.model }}</option>
+              }
+            </select>
+          </label>
+          <label class="field">
+            <span>Pickup branch</span>
+            <select formControlName="pickup_branch_id">
+              @for (branch of branches(); track branch.id) {
+                <option [value]="branch.id">{{ branch.name }}</option>
+              }
+            </select>
+          </label>
+          <label class="field">
+            <span>Return branch</span>
+            <select formControlName="return_branch_id">
+              @for (branch of branches(); track branch.id) {
+                <option [value]="branch.id">{{ branch.name }}</option>
+              }
+            </select>
+          </label>
+          <label class="field">
+            <span>Pickup date/time</span>
+            <input type="datetime-local" formControlName="start_date">
+          </label>
+          <label class="field">
+            <span>Return date/time</span>
+            <input type="datetime-local" formControlName="end_date">
+          </label>
+          <label class="field">
+            <span>Renter name</span>
+            <input formControlName="renter_name">
+          </label>
+          <label class="field">
+            <span>Phone</span>
+            <input formControlName="phone">
+          </label>
+        </div>
+
+        <h2>Driver verification</h2>
+        <div class="grid three">
+          <label class="field">
+            <span>License number</span>
+            <input formControlName="license_number">
+          </label>
+          <label class="field">
+            <span>License expiry</span>
+            <input type="date" formControlName="license_expiry">
+          </label>
+          <label class="field">
+            <span>License document URL</span>
+            <input formControlName="document_url" placeholder="Temporary upload URL">
+          </label>
+        </div>
+
+        <h2>Add-ons</h2>
+        <div class="addons">
+          <label><input type="checkbox" formControlName="gps"> GPS</label>
+          <label><input type="checkbox" formControlName="child_seat"> Child seat</label>
+          <label><input type="checkbox" formControlName="additional_driver"> Additional driver</label>
+          <label class="field">
+            <span>Insurance</span>
+            <select formControlName="insurance">
+              <option value="basic">Basic included</option>
+              <option value="full">Full insurance</option>
+            </select>
+          </label>
+        </div>
+
+        <label class="policy">
+          <input type="checkbox" formControlName="accept_policy">
+          <span>Cancellation is free until 24 hours before pickup. Modifications are subject to availability and current pricing.</span>
+        </label>
+
+        @if (error()) {
+          <p class="error">{{ error() }}</p>
+        }
+
+        @if (!auth.isLoggedIn()) {
+          <a class="btn" routerLink="/login">Sign in to continue</a>
+        }
+        <button class="btn primary" type="submit">Create booking</button>
+      </form>
+    </div>
+
+    <aside class="surface invoice">
+      <span class="eyebrow">Live price breakdown</span>
+      @if (selectedVehicle(); as vehicle) {
+        <img [src]="vehicle.image_url || 'https://images.unsplash.com/photo-1549924231-f129b911e442?auto=format&fit=crop&w=900&q=80'" [alt]="vehicle.make + ' ' + vehicle.model">
+        <h2>{{ vehicle.make }} {{ vehicle.model }}</h2>
+      }
+      <dl>
+        <div><dt>{{ price().days }} rental days</dt><dd>${{ price().base }}</dd></div>
+        <div><dt>Insurance</dt><dd>${{ price().insurance }}</dd></div>
+        <div><dt>Add-ons</dt><dd>${{ price().addons }}</dd></div>
+        <div><dt>Taxes</dt><dd>${{ price().taxes }}</dd></div>
+        <div class="total"><dt>Total</dt><dd>${{ price().total }}</dd></div>
+      </dl>
+      <p class="trust">Secure Stripe test-mode checkout. Raw card data is never stored by the app.</p>
+
+      @if (createdBooking(); as booking) {
+        <div class="confirmation">
+          <strong>Reference {{ booking.reference || ('AD-' + booking.id) }}</strong>
+          <p>Booking created. Pay now to confirm and generate a downloadable confirmation.</p>
+          <button class="btn brand" type="button" (click)="pay()">Pay with test card</button>
+        </div>
+      }
+
+      @if (paymentRef()) {
+        <div class="paid">
+          <strong>Payment confirmed</strong>
+          <p>Provider reference: {{ paymentRef() }}</p>
+          <a class="btn" routerLink="/dashboard">View booking history</a>
+        </div>
+      }
+    </aside>
+  </div>
+</section>

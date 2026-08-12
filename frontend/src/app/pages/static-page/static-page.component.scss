@@ -1,0 +1,41 @@
+.static-hero {
+  min-height: 70svh;
+  display: grid;
+  align-items: center;
+}
+
+.static-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 420px;
+  gap: 30px;
+  align-items: center;
+}
+
+.point-card {
+  display: grid;
+  gap: 12px;
+  padding: 18px;
+}
+
+.point-card div {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 14px;
+  background: rgba(255, 255, 255, 0.68);
+}
+
+.point-card span {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: var(--brand);
+}
+
+@media (max-width: 820px) {
+  .static-grid {
+    grid-template-columns: 1fr;
+  }
+}

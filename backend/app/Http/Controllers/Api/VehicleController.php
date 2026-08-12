@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Vehicle;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -11,62 +12,29 @@ class VehicleController extends Controller
 {
     public function index(Request $request): JsonResponse
     {
-        $query = Vehicle::with('branch')->where('status', 'available');
+        $vehicles = Vehicle::query()
+            ->with(['branch'])
+            ->withAvg('reviews', 'rating')
+            ->withCount('reviews')
+            ->where('status', 'available')
+            ->when($request->query('category'), fn (Builder $query, string $category) => $query->where('category', $category))
+            ->when($request->query('transmission'), fn (Builder $query, string $transmission) => $query->where('transmission', $transmission))
+            ->when($request->query('seats'), fn (Builder $query, string $seats) => $query->where('seats', '>=', (int) $seats))
+            ->when($request->query('min_price'), fn (Builder $query, string $price) => $query->where('daily_rate', '>=', (float) $price))
+            ->when($request->query('max_price'), fn (Builder $query, string $price) => $query->where('daily_rate', '<=', (float) $price))
+            ->when($request->query('pickup_location'), function (Builder $query, string $location): void {
+                $query->whereHas('branch', function (Builder $branchQuery) use ($location): void {
+                    $branchQuery->where('name', 'ilike', "%{$location}%")
+                        ->orWhere('city', 'ilike', "%{$location}%");
+                });
+            })
+            ->availableBetween($request->query('pickup_at'), $request->query('return_at'))
+            ->orderBy('daily_rate')
+            ->paginate(12);
 
-        if ($request->filled('category')) {
-            $query->where('category', $request->category);
-        }
-
-        if ($request->filled('transmission')) {
-            $query->where('transmission', $request->transmission);
-        }
-
-        if ($request->filled('seats')) {
-            $query->where('seats', '>=', $request->seats);
-        }
-
-        if ($request->filled('min_price')) {
-            $query->where('daily_rate', '>=', $request->min_price);
-        }
-
-        if ($request->filled('max_price')) {
-            $query->where('daily_rate', '<=', $request->max_price);
-        }
-
-        if ($request->filled('branch_id')) {
-            $query->where('branch_id', $request->branch_id);
-        }
-
-        if ($request->filled('start_date') && $request->filled('end_date')) {
-            $startDate = $request->start_date;
-            $endDate = $request->end_date;
-            $query->whereDoesntHave('bookings', function ($q) use ($startDate, $endDate) {
-                $q->whereIn('status', ['pending', 'confirmed', 'picked_up'])
-                    ->where(function ($q2) use ($startDate, $endDate) {
-                        $q2->whereBetween('start_date', [$startDate, $endDate])
-                            ->orWhereBetween('end_date', [$startDate, $endDate])
-                            ->orWhere(function ($q3) use ($startDate, $endDate) {
-                                $q3->where('start_date', '<=', $startDate)
-                                    ->where('end_date', '>=', $endDate);
-                            });
-                    });
-            });
-        }
-
-        if ($request->filled('search')) {
-            $search = $request->search;
-            $query->where(function ($q) use ($search) {
-                $q->where('make', 'ilike', "%{$search}%")
-                    ->orWhere('model', 'ilike', "%{$search}%")
-                    ->orWhere('description', 'ilike', "%{$search}%");
-            });
-        }
-
-        $vehicles = $query->orderBy('daily_rate')->paginate($request->get('per_page', 12));
-
-        $vehicles->getCollection()->transform(function ($vehicle) {
-            $vehicle->average_rating = $vehicle->averageRating();
-            $vehicle->review_count = $vehicle->reviews()->count();
+        $vehicles->getCollection()->transform(function (Vehicle $vehicle): Vehicle {
+            $vehicle->rating = round((float) ($vehicle->reviews_avg_rating ?? 4.8), 1);
+            $vehicle->available = true;
             return $vehicle;
         });
 
@@ -75,10 +43,9 @@ class VehicleController extends Controller
 
     public function show(Vehicle $vehicle): JsonResponse
     {
-        $vehicle->load('branch', 'reviews.user');
-        $vehicle->average_rating = $vehicle->averageRating();
-        $vehicle->review_count = $vehicle->reviews()->count();
+        $vehicle->load(['branch', 'reviews.user'])->loadAvg('reviews', 'rating')->loadCount('reviews');
+        $vehicle->rating = round((float) ($vehicle->reviews_avg_rating ?? 4.8), 1);
 
-        return response()->json($vehicle);
+        return response()->json(['data' => $vehicle]);
     }
 }

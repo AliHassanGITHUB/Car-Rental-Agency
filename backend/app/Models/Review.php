@@ -9,11 +9,6 @@ class Review extends Model
 {
     protected $fillable = ['vehicle_id', 'user_id', 'rating', 'comment'];
 
-    protected function casts(): array
-    {
-        return ['rating' => 'integer'];
-    }
-
     public function vehicle(): BelongsTo
     {
         return $this->belongsTo(Vehicle::class);
